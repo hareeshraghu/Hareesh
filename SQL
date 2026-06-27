@@ -1,3 +1,65 @@
-Place : chennai
-12345789
-12 13 17
+                                 DATA Engineering
+
+
+25/06/2026
+DAY 1 >> CLASS<<
+
+
+SQL      > STRUCTURED QUERY LANGUAGE, JUST LIKE PYTHON
+
+MY SQL> ONE OF THE DB TOOLS
+
+
+WHY TO RELY ON THESE DB TOOLS?
+
+>Excel is only local
+
+>Excel can store only upto 10L Rows & 16384 Columns
+
+>If You load more than 50,000 Rows, Excel will open tomorrow)
+
+                                   DBMS - Database management system
+
+
+RDBMS                                  NRDBMS
+
+It handles only structured data        It handles only unstructured data
+
+(Rows & Columns)                       ( Audio , video , text , images)
+
+
+                    TOOLS
+
+
+SQL WORKBENCH                          MANGO DB
+
+ORACLE DB                              APACHE
+
+MS SQL SERVER                          AMAZON
+
+POSTGRE SQL
+
+                 SQL COURSE
+
+            (BASIC TO ADVANCE)
+
+
+AGENDA AT A GLANCE
+
+1.INSTALLING MY SQL AND CREATING A DB
+
+2.INSERTING DATA
+
+3.DQL AND DML OPERATIONS
+
+4.AGGREGATE FUNCTIONS & SUB QUERIES
+
+5.JOINS AND GROUPING
+
+6.WINDOW FUNCTIONS & STORE PROCEDURES
+
+BEFORE WE BEGIN...
+
+
+"Small Steps each day lead
+To big results tomorrow."
