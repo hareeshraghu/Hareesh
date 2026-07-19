@@ -1,0 +1,214 @@
+                                                                                                                      Joins
+
+CREATE DATABASE ecommerce_db;
+USE ecommerce_db;
+ 
+CREATE TABLE Categories (
+    CategoryID INT PRIMARY KEY,
+    CategoryName VARCHAR(100) NOT NULL
+);
+CREATE TABLE Suppliers (
+    SupplierID INT PRIMARY KEY,
+    SupplierName VARCHAR(100) NOT NULL
+);
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    EmployeeName VARCHAR(100) NOT NULL
+);
+CREATE TABLE Shippers (
+    ShipperID INT PRIMARY KEY,
+    ShipperName VARCHAR(100) NOT NULL
+);
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    CustomerName VARCHAR(100) NOT NULL,
+    City VARCHAR(100),
+    Country VARCHAR(100)
+);
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(100) NOT NULL,
+    CategoryID INT,
+    SupplierID INT,
+    Price DECIMAL(10,2),
+
+    FOREIGN KEY (CategoryID)
+    REFERENCES Categories(CategoryID),
+
+    FOREIGN KEY (SupplierID)
+    REFERENCES Suppliers(SupplierID)
+);
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    EmployeeID INT,
+    ShipperID INT,
+    OrderDate DATE,
+
+    FOREIGN KEY (CustomerID)
+    REFERENCES Customers(CustomerID),
+
+    FOREIGN KEY (EmployeeID)
+    REFERENCES Employees(EmployeeID),
+
+    FOREIGN KEY (ShipperID)
+    REFERENCES Shippers(ShipperID)
+);
+
+CREATE TABLE Order_Items (
+    OrderItemID INT PRIMARY KEY,
+    OrderID INT,
+    ProductID INT,
+    Quantity INT,
+
+    FOREIGN KEY (OrderID)
+    REFERENCES Orders(OrderID),
+
+    FOREIGN KEY (ProductID)
+    REFERENCES Products(ProductID)
+);
+
+INSERT INTO Categories VALUES
+(1, 'Electronics'),
+(2, 'Clothing'),
+(3, 'Books'),
+(4, 'Home Appliances'),
+(5, 'Sports');
+INSERT INTO Suppliers VALUES
+(1, 'Tech Supplier'),
+(2, 'Fashion World'),
+(3, 'Book House'),
+(4, 'Home Needs'),
+(5, 'Sports Hub');
+INSERT INTO Employees VALUES
+(1, 'Arun'),
+(2, 'Bala'),
+(3, 'Chitra'),
+(4, 'Divya'),
+(5, 'Ezhil');
+
+INSERT INTO Shippers VALUES
+(1, 'DHL'),
+(2, 'FedEx'),
+(3, 'Blue Dart');
+INSERT INTO Customers VALUES
+(1, 'Hareesh', 'Chennai', 'India'),
+(2, 'Rahul', 'Bangalore', 'India'),
+(3, 'Priya', 'Mumbai', 'India'),
+(4, 'Kumar', 'Hyderabad', 'India'),
+(5, 'Anitha', 'Delhi', 'India'),
+(6, 'Suresh', 'Chennai', 'India'),
+(7, 'Meena', 'Coimbatore', 'India');
+INSERT INTO Products VALUES
+(1, 'Laptop', 1, 1, 60000),
+(2, 'Mobile Phone', 1, 1, 25000),
+(3, 'T-Shirt', 2, 2, 800),
+(4, 'Jeans', 2, 2, 2000),
+(5, 'SQL Book', 3, 3, 700),
+(6, 'Python Book', 3, 3, 900),
+(7, 'Mixer Grinder', 4, 4, 4500),
+(8, 'Football', 5, 5, 1500),
+(9, 'Headphones', 1, 1, 3000),
+(10, 'Novel Book', 3, 3, 500);
+INSERT INTO Orders VALUES
+(101, 1, 1, 1, '2026-01-05'),
+(102, 2, 2, 2, '2026-01-10'),
+(103, 1, 3, 1, '2026-02-15'),
+(104, 3, 1, 3, '2026-02-20'),
+(105, 4, 4, 2, '2026-03-01'),
+(106, 5, 5, 1, '2026-03-10'),
+(107, 1, 2, 3, '2026-03-15'),
+(108, 6, 3, 2, '2026-04-01');
+INSERT INTO Order_Items VALUES
+(1, 101, 1, 1),
+(2, 101, 9, 2),
+(3, 102, 2, 1),
+(4, 102, 3, 3),
+(5, 103, 5, 2),
+(6, 103, 6, 1),
+(7, 104, 4, 1),
+(8, 105, 7, 1),
+(9, 105, 8, 2),
+(10, 106, 2, 1),
+(11, 107, 1, 1),
+(12, 107, 5, 1),
+(13, 108, 3, 2);
+
+SELECT * FROM Customers;
+SELECT * FROM Orders;
+SELECT * FROM Order_Items;
+SELECT * FROM Products;
+SELECT * FROM Categories;
+SELECT * FROM Suppliers;
+SELECT * FROM Employees;
+SELECT * FROM Shippers;
+
+1. Display all customers with their orders
+SELECT  c.CustomerID, c.CustomerName,  o.OrderID,  o.OrderDate FROM Customers c INNER JOIN Orders o ON c.CustomerID o.CustomerID;
+2. Display order details with customer names
+SELECT o.OrderID, c.CustomerName, o.OrderDate FROM Orders o INNER JOIN Customers c ON o.CustomerID = c.CustomerID;
+3. Show every product with its category
+SELECT  p.ProductID,  p.ProductName, c.CategoryName FROM Products p INNER JOIN Categories c ON p.CategoryID = c.CategoryID;
+4. Display products with supplier names
+SELECT  p.ProductID, p.ProductName, s.SupplierName FROM Products p INNER JOIN Suppliers s ON p.SupplierID = s.SupplierID;
+5. Show orders handled by each employee
+SELECT  o.OrderID, e.EmployeeName, o.OrderDate FROM Orders o INNER JOIN Employees e ON o.EmployeeID = e.EmployeeID;
+6. Display orders with shipper names
+SELECT o.OrderID,  s.ShipperName, o.OrderDate FROM Orders o INNER JOIN Shippers s ON o.ShipperID = s.ShipperID;
+7. Show customers who placed at least one order
+SELECT DISTINCT c.CustomerID,  c.CustomerName FROM Customers c INNER JOIN Orders o ON c.CustomerID = o.CustomerID;
+8. Display products purchased in each order
+SELECT oi.OrderID, p.ProductName  oi.Quantity FROM Order_Items oi INNER JOIN Products p ON oi.ProductID = p.ProductID;
+9. Display product name and quantity ordered
+SELECT  p.ProductName, oi.Quantity FROM Products p INNER JOIN Order_Items oi ON p.ProductID = oi.ProductID;
+10. Display employee names and customer names
+SELECT  e.EmployeeName, c.CustomerName,   o.OrderID FROM Orders o INNER JOIN Employees e ON o.EmployeeID = e.EmployeeID INNER JOIN Customers c ON o.CustomerID = c.CustomerID;
+11. Display customer, order, product, quantity and price
+SELECT c.CustomerName, o.OrderID,  p.ProductName,  oi.Quantity, p.Price FROM Customers c INNER JOIN Orders o ON c.CustomerID = o.CustomerID INNER JOIN Order_Items oi ON o.OrderID = oi.OrderID INNER JOIN Products p ON oi.ProductID = p.ProductID;
+12. Display supplier name with products sold
+SELECT  s.SupplierName,  p.ProductName,  p.Price FROM Suppliers s INNER JOIN Products p ON s.SupplierID = p.SupplierID;
+13. Display category-wise product count
+SELECT c.CategoryName,COUNT(p.ProductID) AS ProductCount FROM Categories c LEFT JOIN Products p ON c.CategoryID = p.CategoryID
+GROUP BY c.CategoryID c.CategoryName;
+14. Find total orders for each customer
+SELECT c.CustomerID, c.CustomerName, COUNT(o.OrderID) AS TotalOrders FROM Customers c LEFT JOIN Orders o ON c.CustomerID = o.CustomerID GROUP BY c.CustomerID,  c.CustomerName;
+15. Find total sales by employee
+SELECT e.EmployeeName, SUM(oi.Quantity * p.Price) AS TotalSales FROM Employees e INNER JOIN Orders o ON e.EmployeeID = o.EmployeeID INNER JOIN Order_Items oi ON o.OrderID = oi.OrderID INNER JOIN Products p ON oi.ProductID = p.ProductID GROUP BY e.EmployeeID, e.EmployeeName;
+16. Find total revenue by category
+SELECT c.CategoryName, SUM(oi.Quantity * p.Price) AS TotalRevenue FROM Categories c INNER JOIN Products p ON c.CategoryID = p.CategoryID INNER JOIN Order_Items oi ON p.ProductID = oi.ProductID GROUP BY c.CategoryID, c.CategoryName;
+17. Display the most expensive product in every category
+SELECT c.CategoryName, p.ProductName, p.Price FROM Products p INNER JOIN Categories c ON p.CategoryID = c.CategoryID WHERE p.Price = ( SELECT MAX(p2.Price) FROM Products p2 WHERE p2.CategoryID = p.CategoryID );
+18. Find products never ordered
+SELECT p.ProductID, p.ProductName FROM Products p LEFT JOIN Order_Items oi ON p.ProductID = oi.ProductID WHERE oi.ProductID IS NULL;
+19. Find customers who never placed orders
+SELECT c.CustomerID,  c.CustomerName FROM Customers c LEFT JOIN Orders o ON c.CustomerID = o.CustomerID WHERE o.OrderID IS NULL;
+20. Display suppliers without products
+SELECT s.SupplierID,  s.SupplierName FROM Suppliers s LEFT JOIN Products p ON s.SupplierID = p.SupplierID WHERE p.ProductID IS NULL;
+21. Find top five customers by spending
+SELECT c.CustomerName, SUM(oi.Quantity * p.Price) AS TotalSpending FROM Customers c INNER JOIN Orders o ON c.CustomerID = o.CustomerID
+INNER JOIN Order_Items oi ON o.OrderID = oi.OrderID INNER JOIN Products p ON oi.ProductID = p.ProductID
+GROUP BY c.CustomerID, c.CustomerName
+ORDER BY TotalSpending DESC LIMIT 5;
+22. Display monthly sales by employee
+SELECT e.EmployeeName, YEAR(o.OrderDate) AS SalesYear, MONTH(o.OrderDate) AS SalesMonth, SUM(oi.Quantity * p.Price) AS MonthlySales FROM Employees e INNER JOIN Orders o ON e.EmployeeID = o.EmployeeID INNER JOIN Order_Items oi ON o.OrderID = oi.OrderID INNER JOIN Products p ON oi.ProductID = p.ProductID
+GROUP BY e.EmployeeID, e.EmployeeName, YEAR(o.OrderDate)  MONTH(o.OrderDate)
+ORDER BY SalesYear, SalesMonth;
+23. Find the best-selling product
+SELECT p.ProductName, SUM(oi.Quantity) AS TotalQuantitySold FROM Products p INNER JOIN Order_Items oi ON p.ProductID = oi.ProductID GROUP BY p.ProductID, p.ProductName ORDER BY TotalQuantitySold DESC LIMIT 1;
+24. Display supplier-wise revenue
+SELECT s.SupplierName, SUM(oi.Quantity * p.Price) AS TotalRevenue FROM Suppliers s INNER JOIN Products p ON s.SupplierID = p.SupplierID INNER JOIN Order_Items oi ON p.ProductID = oi.ProductID GROUP BY s.SupplierID, s.SupplierName;
+25. Find average order value per customer
+SELECT c.CustomerName, AVG(OrderTotal.TotalAmount) AS AverageOrderValue FROM Customers c INNER JOIN ( SELECT o.OrderID, o.CustomerID, SUM(oi.Quantity * p.Price) AS TotalAmount FROM Orders o INNER JOIN Order_Items oi ON o.OrderID = oi.OrderID INNER JOIN Products p ON oi.ProductID = p.ProductID GROUP BY o.OrderID, o.CustomerID ) AS OrderTotal ON c.CustomerID = OrderTotal.CustomerID GROUP BY c.CustomerID, c.CustomerName;
+26. Display orders with more than three products
+SELECT o.OrderID, SUM(oi.Quantity) AS TotalProducts FROM Orders o INNER JOIN Order_Items oi ON o.OrderID = oi.OrderID GROUP BY o.OrderID HAVING SUM(oi.Quantity) > 3;
+27. Find customers ordering from multiple categories
+SELECT c.CustomerName, COUNT(DISTINCT p.CategoryID) AS CategoryCount FROM Customers c INNER JOIN Orders o ON c.CustomerID = o.CustomerID INNER JOIN Order_Items oi ON o.OrderID = oi.OrderID INNER JOIN Products p ON oi.ProductID = p.ProductID GROUP BY c.CustomerID, c.CustomerName HAVING COUNT(DISTINCT p.CategoryID) > 1;
+28. Display categories with no sales
+SELECT c.CategoryID, c.CategoryName FROM Categories c LEFT JOIN Products p ON c.CategoryID = p.CategoryID LEFT JOIN Order_Items oi ON p.ProductID = oi.ProductID WHERE oi.OrderItemID IS NULL;
+29. Display the highest-value order
+SELECT o.OrderID, c.CustomerName, SUM(oi.Quantity * p.Price) AS OrderValue FROM Orders o INNER JOIN Customers c ON o.CustomerID = c.CustomerID INNER JOIN Order_Items oi ON o.OrderID = oi.OrderID INNER JOIN Products p ON oi.ProductID = p.ProductID GROUP BY o.OrderID, c.CustomerName ORDER BY OrderValue DESC LIMIT 1;
+30. Generate a complete invoice report using all tables
+SELECT o.OrderID, o.OrderDate, c.CustomerName, c.City, c.Country, e.EmployeeName, s.ShipperName, p.ProductName, cat.CategoryName, sup.SupplierName, oi.Quantity, p.Price, (oi.Quantity * p.Price) AS TotalAmount FROM Orders o
+
